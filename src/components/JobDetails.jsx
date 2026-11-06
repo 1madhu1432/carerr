@@ -230,7 +230,6 @@ export default function JobDetails() {
   }
 
   const tags = [
-    `Job ID: #${job.id}`,
     job.location && job.location !== 'Location not specified' ? job.location : (job.city && job.city !== 'Other' ? job.city : ''),
     job.type,
     job.remote ? 'Remote' : '',

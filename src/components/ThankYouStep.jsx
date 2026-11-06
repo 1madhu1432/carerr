@@ -79,20 +79,14 @@ export default function ThankYouStep({ candidateName, candidateId, jobId, roleNa
           Role: <strong style={{ color: 'var(--ink)' }}>{roleName || 'General Application'}</strong>
         </p>
 
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(130px, 1fr))', gap: '0.75rem', marginTop: '0.5rem' }}>
-          {candidateId && (
-            <div style={{ padding: '8px 12px', background: 'var(--surface)', borderRadius: '8px', border: '1px solid var(--line)' }}>
+        {candidateId && (
+          <div style={{ marginTop: '0.75rem' }}>
+            <div style={{ padding: '8px 14px', background: 'var(--surface)', borderRadius: '8px', border: '1px solid var(--line)', display: 'inline-block' }}>
               <span style={{ display: 'block', fontSize: '0.75rem', color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '0.04em' }}>Candidate ID</span>
-              <strong style={{ fontSize: '0.9375rem', color: 'var(--ink)' }}>#{candidateId}</strong>
+              <strong style={{ fontSize: '1rem', color: 'var(--ink)' }}>#{candidateId}</strong>
             </div>
-          )}
-          {jobId && (
-            <div style={{ padding: '8px 12px', background: 'var(--surface)', borderRadius: '8px', border: '1px solid var(--line)' }}>
-              <span style={{ display: 'block', fontSize: '0.75rem', color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '0.04em' }}>Job ID</span>
-              <strong style={{ fontSize: '0.9375rem', color: 'var(--ink)' }}>#{jobId}</strong>
-            </div>
-          )}
-        </div>
+          </div>
+        )}
       </div>
 
       <p style={{ color: 'var(--muted)', fontSize: '0.9375rem', maxWidth: '30rem', margin: '0 auto 2rem' }}>

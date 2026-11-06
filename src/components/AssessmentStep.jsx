@@ -59,7 +59,7 @@ export default function AssessmentStep({
             marginBottom: '0.75rem'
           }}
         >
-          Step 2 of 2 · Role Assessment · Job ID: #{job?.id}
+          Step 2 of 2 · Role Assessment
         </span>
         <h2 style={{ fontSize: 'clamp(1.75rem, 4vw, 2.5rem)', margin: '0 0 0.5rem', lineHeight: 1.15 }}>
           {assessment.title}

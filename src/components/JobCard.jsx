@@ -3,7 +3,6 @@ import { Link } from 'react-router-dom';
 
 export default function JobCard({ job }) {
   const tags = [
-    `Job ID: #${job.id}`,
     job.location && job.location !== 'Location not specified' ? job.location : (job.city && job.city !== 'Other' ? job.city : ''),
     job.type,
     job.remote ? 'Remote' : ''
