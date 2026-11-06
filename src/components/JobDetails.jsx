@@ -839,8 +839,8 @@ export default function JobDetails() {
                       {isSubmitting
                         ? 'Submitting Application…'
                         : (assessmentConfig && assessmentConfig.questions && assessmentConfig.questions.length > 0
-                            ? 'Continue to Pre-Screen →'
-                            : 'Apply Now !')}
+                          ? 'Continue to Pre-Screen →'
+                          : 'Apply Now !')}
                     </button>
                   </div>
                 </form>
