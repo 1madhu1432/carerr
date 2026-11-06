@@ -33,7 +33,7 @@ export default function HeroSection() {
         </g>
       </svg>
       <div className="wrap">
-        <h1>Join our team—bring a new vision to customers.</h1>
+        <h1>Opportunity always !</h1>
         <p className="hero-lede">
           We are a growing team shaping the future of retail. Our innovative format sets us apart in the market. Join us as we redefine the coffee experience.
         </p>
