@@ -136,7 +136,15 @@ export default function JobListings() {
             )}
           </div>
         ) : (
-          <div className="jobs">
+          <div
+            className="jobs-grid"
+            style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))',
+              gap: '1.5rem',
+              marginTop: '1.5rem'
+            }}
+          >
             {filteredJobs.map((job) => (
               <JobCard key={job.id} job={job} />
             ))}

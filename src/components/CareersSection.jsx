@@ -28,9 +28,6 @@ export default function CareersSection() {
       <HeroSection />
       <JobListings />
       <CompanyCulture />
-      <HiringProcess />
-      <ApplicationForm />
-      <FaqSection />
     </main>
   );
 }

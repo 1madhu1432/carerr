@@ -138,3 +138,4 @@ export function getAssessmentForJob(job) {
 
   return null;
 }
+

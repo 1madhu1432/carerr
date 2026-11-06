@@ -97,3 +97,4 @@ export default function ThankYouStep({ candidateName, candidateId, roleName, isM
     </div>
   );
 }
+
