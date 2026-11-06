@@ -29,7 +29,7 @@ export default function Navbar() {
 
         <nav className="topnav" aria-label="Main">
           <a className="navlink" href="#roles">Open roles</a>
-          <a className="navlink" href="#perks">Perks</a>
+          <a className="navlink" href="#culture">Culture</a>
 
           <a
             className="btn btn-primary btn-sm"

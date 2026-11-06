@@ -173,8 +173,15 @@ export default function JobDetails() {
       setCandidateId(createdId);
       setCandidateName(formData.name.trim());
 
-      // Application complete with pre-screening answers -> direct transition to Thank You page
-      setStage('thankyou');
+      // Site Architecture Routing:
+      // "Application form related that job role -> If it is -> Pre-Screen (within in a site Related JOB ID assessments) -> Go to the Realted Job ID"
+      // "If not having any assessment -> Go to the Realted Job ID"
+      const assessment = assessmentConfig || getAssessmentForJob(job);
+      if (assessment && assessment.questions && assessment.questions.length > 0) {
+        setStage('assessment'); // Screen 3: Pre-Screen
+      } else {
+        setStage('thankyou');   // Screen 4: Thank You
+      }
       window.scrollTo({ top: 0, behavior: 'smooth' });
     } catch (err) {
       setSubmitError(err.message || 'Failed to submit application. Please try again.');
@@ -798,53 +805,6 @@ export default function JobDetails() {
                         }}
                       />
                     </div>
-
-                    {/* Pre-Screening Questionnaire from Zoho Recruit */}
-                    {assessmentConfig && assessmentConfig.questions && assessmentConfig.questions.length > 0 && (
-                      <div
-                        style={{
-                          marginTop: '0.5rem',
-                          paddingTop: '1.25rem',
-                          borderTop: '1px solid var(--line)'
-                        }}
-                      >
-                        <div style={{ marginBottom: '1rem' }}>
-                          <h4 style={{ margin: '0 0 4px', fontSize: '1rem', fontWeight: 600, color: 'var(--ink)' }}>
-                            Pre-Screening Questionnaire
-                          </h4>
-                          <p style={{ margin: 0, fontSize: '0.8125rem', color: 'var(--muted)' }}>
-                            Please answer the questions below required for this role ({assessmentConfig.title || job.title}).
-                          </p>
-                        </div>
-
-                        <div style={{ display: 'grid', gap: '1rem' }}>
-                          {assessmentConfig.questions.map((q, idx) => (
-                            <div key={q.id || idx}>
-                              <label style={{ display: 'block', fontSize: '0.875rem', fontWeight: 600, marginBottom: '6px' }}>
-                                {idx + 1}. {q.question} {q.mandatory && <span style={{ color: 'var(--error)' }}>*</span>}
-                              </label>
-                              <textarea
-                                rows={2}
-                                value={questionAnswers[q.question] || ''}
-                                onChange={(e) => handleQuestionChange(q.question, e.target.value)}
-                                placeholder="Type your response here…"
-                                style={{
-                                  width: '100%',
-                                  padding: '10px 12px',
-                                  borderRadius: '8px',
-                                  border: '1px solid var(--line)',
-                                  background: 'var(--paper)',
-                                  color: 'var(--ink)',
-                                  fontSize: '0.9375rem',
-                                  fontFamily: 'inherit',
-                                  resize: 'vertical'
-                                }}
-                              />
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-                    )}
                   </div>
 
                   {submitError && (
@@ -862,7 +822,7 @@ export default function JobDetails() {
                     </div>
                   )}
 
-                  {/* Green Apply Now! Button matching wireframe */}
+                  {/* Submit Button matching Site Architecture */}
                   <div style={{ marginTop: '1.75rem' }}>
                     <button
                       type="submit"
@@ -876,7 +836,11 @@ export default function JobDetails() {
                         cursor: isSubmitting ? 'not-allowed' : 'pointer'
                       }}
                     >
-                      {isSubmitting ? 'Submitting Application…' : 'Apply Now !'}
+                      {isSubmitting
+                        ? 'Submitting Application…'
+                        : (assessmentConfig && assessmentConfig.questions && assessmentConfig.questions.length > 0
+                            ? 'Continue to Pre-Screen →'
+                            : 'Apply Now !')}
                     </button>
                   </div>
                 </form>

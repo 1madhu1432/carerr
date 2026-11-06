@@ -33,19 +33,13 @@ export default function HeroSection() {
         </g>
       </svg>
       <div className="wrap">
-        <h1>Pour the first cup of someone’s day.</h1>
+        <h1>Join our team—bring a new vision to customers.</h1>
         <p className="hero-lede">
-          Sélon Coffee is hiring at our cafés and roastery. We’ll teach you everything from steaming milk to dialing in espresso. You bring the warmth.
+          We are a growing team shaping the future of retail. Our innovative format sets us apart in the market. Join us as we redefine the coffee experience.
         </p>
         <div className="hero-actions">
           <a className="btn btn-primary" href="#roles">See open roles</a>
-          <a className="btn btn-ghost" href="#process">How hiring works</a>
         </div>
-        <ul className="hero-points">
-          <li>Paid training from day one</li>
-          <li>Flexible shifts</li>
-          <li>Free drinks every shift</li>
-        </ul>
       </div>
     </section>
   );
