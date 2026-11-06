@@ -7,27 +7,37 @@
 export const ASSESSMENTS = {
   // Assessment for Operations Executive (Live Zoho Job Opening)
   'operations executive': {
-    title: 'Operations & Store Leadership Assessment',
+    title: 'Operations Executive Pre-Screening',
     timeEstimate: '3–5 mins',
-    description: 'This short assessment helps our leadership team understand your operational mindset, team management style, and problem-solving approach.',
+    description: 'Please answer these questions to help our leadership team understand your interest, management approach, and availability for this role.',
     questions: [
       {
-        id: 'ops_experience',
-        question: 'How do you approach managing daily store operations and maintaining quality standards during high-volume peak hours?',
+        id: 'ops_why_job',
+        question: 'Why did you like this JOB ?',
         type: 'textarea',
-        placeholder: 'Share a brief example of how you organize shifts, handle rush periods, or maintain store excellence...'
+        placeholder: 'Tell us what attracted you to this Operations Executive role at Sélon Coffee...'
       },
       {
-        id: 'team_leadership',
-        question: 'Describe your method for setting performance goals, mentoring team members, and minimizing store inventory waste.',
+        id: 'ops_manage_chaos',
+        question: 'How can mange a chaos',
         type: 'textarea',
-        placeholder: 'Describe your leadership style and practical methods for managing stock variance and targets...'
+        placeholder: 'Describe how you maintain structure, calm, and performance during chaotic or fast-paced situations...'
       },
       {
-        id: 'scenario_handling',
-        question: 'Scenario: Two key team members call in sick right before a major morning peak rush. What is your immediate action plan?',
+        id: 'ops_relocate',
+        question: 'Are to ready to relocate',
+        type: 'choice',
+        options: [
+          'Yes — ready to relocate as required',
+          'Open to relocate with company support',
+          'Prefer remote / current location only'
+        ]
+      },
+      {
+        id: 'ops_salary',
+        question: 'sALARY EXPECTIONS',
         type: 'textarea',
-        placeholder: 'Outline the steps you would take to keep service moving and customers happy...'
+        placeholder: 'Share your current and expected CTC / compensation expectations...'
       }
     ]
   },

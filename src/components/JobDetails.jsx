@@ -53,7 +53,7 @@ export default function JobDetails() {
         if (!res.ok) throw new Error(`Role not found`);
         const data = await res.json();
         setJob(data.job);
-        setAssessmentConfig(getAssessmentForJob(data.job));
+        setAssessmentConfig(data.job?.assessment || getAssessmentForJob(data.job));
       } catch (err) {
         setError(err.message);
       } finally {
