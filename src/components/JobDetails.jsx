@@ -27,6 +27,12 @@ export default function JobDetails() {
     name: '',
     email: '',
     phone: '',
+    city: '',
+    currentJobTitle: '',
+    currentEmployer: '',
+    experienceInYears: '',
+    qualification: '',
+    skills: '',
     start: 'Right away',
     resumeUrl: '',
     about: ''
@@ -97,6 +103,12 @@ export default function JobDetails() {
     } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email.trim())) {
       errs.email = 'Please provide a valid email address.';
     }
+    if (!formData.phone.trim()) {
+      errs.phone = 'Phone number is required.';
+    }
+    if (!formData.city.trim()) {
+      errs.city = 'City / current location is required.';
+    }
     setErrors(errs);
     return Object.keys(errs).length === 0;
   };
@@ -114,6 +126,12 @@ export default function JobDetails() {
       body.append('name', formData.name.trim());
       body.append('email', formData.email.trim());
       body.append('phone', formData.phone.trim());
+      body.append('city', formData.city.trim());
+      body.append('currentJobTitle', formData.currentJobTitle.trim());
+      body.append('currentEmployer', formData.currentEmployer.trim());
+      body.append('experienceInYears', formData.experienceInYears.trim());
+      body.append('qualification', formData.qualification.trim());
+      body.append('skills', formData.skills.trim());
       body.append('roleId', jobId);
       body.append('start', formData.start);
       body.append('resumeUrl', formData.resumeUrl.trim());
@@ -325,6 +343,60 @@ export default function JobDetails() {
                     __html: job.descriptionHtml || '<p>Ask us about this role when you apply.</p>'
                   }}
                 />
+
+                {/* Role Details & Skills from Zoho Recruit */}
+                {(job.experience || job.skills || job.industry || job.positions) && (
+                  <div style={{ marginTop: '1.75rem', paddingTop: '1.25rem', borderTop: '1px solid var(--line)' }}>
+                    <h4 style={{ margin: '0 0 0.875rem', fontSize: '1rem', fontWeight: 600, color: 'var(--ink)' }}>
+                      Role Overview & Requirements
+                    </h4>
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(130px, 1fr))', gap: '0.75rem', marginBottom: '1rem' }}>
+                      {job.experience && (
+                        <div style={{ padding: '10px 12px', background: 'var(--paper)', borderRadius: '8px', border: '1px solid var(--line)' }}>
+                          <span style={{ display: 'block', fontSize: '0.75rem', color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '0.04em' }}>Experience</span>
+                          <strong style={{ fontSize: '0.9375rem', color: 'var(--ink)' }}>{job.experience}</strong>
+                        </div>
+                      )}
+                      {job.positions && (
+                        <div style={{ padding: '10px 12px', background: 'var(--paper)', borderRadius: '8px', border: '1px solid var(--line)' }}>
+                          <span style={{ display: 'block', fontSize: '0.75rem', color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '0.04em' }}>Openings</span>
+                          <strong style={{ fontSize: '0.9375rem', color: 'var(--ink)' }}>{job.positions} Position{job.positions > 1 ? 's' : ''}</strong>
+                        </div>
+                      )}
+                      {job.type && (
+                        <div style={{ padding: '10px 12px', background: 'var(--paper)', borderRadius: '8px', border: '1px solid var(--line)' }}>
+                          <span style={{ display: 'block', fontSize: '0.75rem', color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '0.04em' }}>Job Type</span>
+                          <strong style={{ fontSize: '0.9375rem', color: 'var(--ink)' }}>{job.type}</strong>
+                        </div>
+                      )}
+                    </div>
+
+                    {job.skills && (
+                      <div>
+                        <span style={{ display: 'block', fontSize: '0.8125rem', fontWeight: 600, color: 'var(--ink)', marginBottom: '6px' }}>
+                          Key Skills & Competencies
+                        </span>
+                        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
+                          {job.skills.split(',').map((skill, idx) => (
+                            <span
+                              key={idx}
+                              style={{
+                                padding: '4px 10px',
+                                background: 'var(--paper)',
+                                border: '1px solid var(--line)',
+                                borderRadius: '6px',
+                                fontSize: '0.8125rem',
+                                color: 'var(--ink)'
+                              }}
+                            >
+                              {skill.trim()}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                )}
               </div>
 
               {/* RIGHT COLUMN: Application Form */}
@@ -338,7 +410,7 @@ export default function JobDetails() {
                   boxShadow: '0 8px 24px rgba(0, 0, 0, 0.04)'
                 }}
               >
-                <div style={{ marginBottom: '1.5rem', paddingBottom: '0.75rem', borderBottom: '1px solid var(--line)' }}>
+                <div style={{ marginBottom: '1.5rem', paddingBottom: '0.75rem', borderTop: 'none', borderBottom: '1px solid var(--line)' }}>
                   <h3
                     style={{
                       fontFamily: '"Gloock", Georgia, serif',
@@ -354,69 +426,226 @@ export default function JobDetails() {
                 </div>
 
                 <form onSubmit={handleApplySubmit} noValidate>
-                  <div style={{ display: 'grid', gap: '1.125rem' }}>
-                    {/* Full Name */}
+                  <div style={{ display: 'grid', gap: '1rem' }}>
+                    {/* Row 1: Full Name & Email */}
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '0.875rem' }}>
+                      <div>
+                        <label style={{ display: 'block', fontSize: '0.875rem', fontWeight: 600, marginBottom: '6px' }}>
+                          Full name *
+                        </label>
+                        <input
+                          type="text"
+                          name="name"
+                          value={formData.name}
+                          onChange={(e) => handleInputChange('name', e.target.value)}
+                          placeholder="e.g. Jane Doe"
+                          style={{
+                            width: '100%',
+                            padding: '10px 12px',
+                            borderRadius: '8px',
+                            border: errors.name ? '1px solid var(--error)' : '1px solid var(--line)',
+                            background: 'var(--paper)',
+                            color: 'var(--ink)',
+                            fontSize: '0.9375rem'
+                          }}
+                        />
+                        {errors.name && <span style={{ color: 'var(--error)', fontSize: '0.8125rem' }}>{errors.name}</span>}
+                      </div>
+
+                      <div>
+                        <label style={{ display: 'block', fontSize: '0.875rem', fontWeight: 600, marginBottom: '6px' }}>
+                          Email address *
+                        </label>
+                        <input
+                          type="email"
+                          name="email"
+                          value={formData.email}
+                          onChange={(e) => handleInputChange('email', e.target.value)}
+                          placeholder="jane@example.com"
+                          style={{
+                            width: '100%',
+                            padding: '10px 12px',
+                            borderRadius: '8px',
+                            border: errors.email ? '1px solid var(--error)' : '1px solid var(--line)',
+                            background: 'var(--paper)',
+                            color: 'var(--ink)',
+                            fontSize: '0.9375rem'
+                          }}
+                        />
+                        {errors.email && <span style={{ color: 'var(--error)', fontSize: '0.8125rem' }}>{errors.email}</span>}
+                      </div>
+                    </div>
+
+                    {/* Row 2: Phone & Current City */}
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '0.875rem' }}>
+                      <div>
+                        <label style={{ display: 'block', fontSize: '0.875rem', fontWeight: 600, marginBottom: '6px' }}>
+                          Phone / Mobile *
+                        </label>
+                        <input
+                          type="tel"
+                          name="phone"
+                          value={formData.phone}
+                          onChange={(e) => handleInputChange('phone', e.target.value)}
+                          placeholder="+91 98765 43210"
+                          style={{
+                            width: '100%',
+                            padding: '10px 12px',
+                            borderRadius: '8px',
+                            border: errors.phone ? '1px solid var(--error)' : '1px solid var(--line)',
+                            background: 'var(--paper)',
+                            color: 'var(--ink)',
+                            fontSize: '0.9375rem'
+                          }}
+                        />
+                        {errors.phone && <span style={{ color: 'var(--error)', fontSize: '0.8125rem' }}>{errors.phone}</span>}
+                      </div>
+
+                      <div>
+                        <label style={{ display: 'block', fontSize: '0.875rem', fontWeight: 600, marginBottom: '6px' }}>
+                          City / Location *
+                        </label>
+                        <input
+                          type="text"
+                          name="city"
+                          value={formData.city}
+                          onChange={(e) => handleInputChange('city', e.target.value)}
+                          placeholder="e.g. Bangalore, Mumbai"
+                          style={{
+                            width: '100%',
+                            padding: '10px 12px',
+                            borderRadius: '8px',
+                            border: errors.city ? '1px solid var(--error)' : '1px solid var(--line)',
+                            background: 'var(--paper)',
+                            color: 'var(--ink)',
+                            fontSize: '0.9375rem'
+                          }}
+                        />
+                        {errors.city && <span style={{ color: 'var(--error)', fontSize: '0.8125rem' }}>{errors.city}</span>}
+                      </div>
+                    </div>
+
+                    {/* Row 3: Current Job Title & Employer */}
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '0.875rem' }}>
+                      <div>
+                        <label style={{ display: 'block', fontSize: '0.875rem', fontWeight: 600, marginBottom: '6px' }}>
+                          Current Job Title <span style={{ color: 'var(--muted)', fontWeight: 400 }}>(or Fresher)</span>
+                        </label>
+                        <input
+                          type="text"
+                          name="currentJobTitle"
+                          value={formData.currentJobTitle}
+                          onChange={(e) => handleInputChange('currentJobTitle', e.target.value)}
+                          placeholder="e.g. Operations Exec, Barista"
+                          style={{
+                            width: '100%',
+                            padding: '10px 12px',
+                            borderRadius: '8px',
+                            border: '1px solid var(--line)',
+                            background: 'var(--paper)',
+                            color: 'var(--ink)',
+                            fontSize: '0.9375rem'
+                          }}
+                        />
+                      </div>
+
+                      <div>
+                        <label style={{ display: 'block', fontSize: '0.875rem', fontWeight: 600, marginBottom: '6px' }}>
+                          Current Employer <span style={{ color: 'var(--muted)', fontWeight: 400 }}>(optional)</span>
+                        </label>
+                        <input
+                          type="text"
+                          name="currentEmployer"
+                          value={formData.currentEmployer}
+                          onChange={(e) => handleInputChange('currentEmployer', e.target.value)}
+                          placeholder="e.g. ABC Retail, Freelance"
+                          style={{
+                            width: '100%',
+                            padding: '10px 12px',
+                            borderRadius: '8px',
+                            border: '1px solid var(--line)',
+                            background: 'var(--paper)',
+                            color: 'var(--ink)',
+                            fontSize: '0.9375rem'
+                          }}
+                        />
+                      </div>
+                    </div>
+
+                    {/* Row 4: Experience (Years) & Highest Qualification */}
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '0.875rem' }}>
+                      <div>
+                        <label style={{ display: 'block', fontSize: '0.875rem', fontWeight: 600, marginBottom: '6px' }}>
+                          Total Experience <span style={{ color: 'var(--muted)', fontWeight: 400 }}>(years)</span>
+                        </label>
+                        <input
+                          type="number"
+                          name="experienceInYears"
+                          min="0"
+                          max="40"
+                          step="0.5"
+                          value={formData.experienceInYears}
+                          onChange={(e) => handleInputChange('experienceInYears', e.target.value)}
+                          placeholder="e.g. 2"
+                          style={{
+                            width: '100%',
+                            padding: '10px 12px',
+                            borderRadius: '8px',
+                            border: '1px solid var(--line)',
+                            background: 'var(--paper)',
+                            color: 'var(--ink)',
+                            fontSize: '0.9375rem'
+                          }}
+                        />
+                      </div>
+
+                      <div>
+                        <label style={{ display: 'block', fontSize: '0.875rem', fontWeight: 600, marginBottom: '6px' }}>
+                          Highest Qualification
+                        </label>
+                        <select
+                          name="qualification"
+                          value={formData.qualification}
+                          onChange={(e) => handleInputChange('qualification', e.target.value)}
+                          style={{
+                            width: '100%',
+                            padding: '10px 12px',
+                            borderRadius: '8px',
+                            border: '1px solid var(--line)',
+                            background: 'var(--paper)',
+                            color: 'var(--ink)',
+                            fontSize: '0.9375rem'
+                          }}
+                        >
+                          <option value="">Select qualification</option>
+                          <option value="B.Tech">B.Tech</option>
+                          <option value="B.E.">B.E.</option>
+                          <option value="B.SC.">B.SC.</option>
+                          <option value="M.C.A.">M.C.A.</option>
+                          <option value="M.S.">M.S.</option>
+                          <option value="Bachelor's Degree">Bachelor's Degree</option>
+                          <option value="Master's Degree (MBA/MS)">Master's Degree (MBA/MS)</option>
+                          <option value="Diploma">Diploma</option>
+                          <option value="High School">High School</option>
+                          <option value="Other">Other</option>
+                        </select>
+                      </div>
+                    </div>
+
+                    {/* Key Skills */}
                     <div>
                       <label style={{ display: 'block', fontSize: '0.875rem', fontWeight: 600, marginBottom: '6px' }}>
-                        Full name *
+                        Key Skills <span style={{ color: 'var(--muted)', fontWeight: 400 }}>(comma separated)</span>
                       </label>
                       <input
                         type="text"
-                        name="name"
-                        value={formData.name}
-                        onChange={(e) => handleInputChange('name', e.target.value)}
-                        placeholder="e.g. Jane Doe"
+                        name="skills"
+                        value={formData.skills}
+                        onChange={(e) => handleInputChange('skills', e.target.value)}
+                        placeholder="e.g. Operations, Retail, Team Building, Inventory"
                         style={{
                           width: '100%',
-                          padding: '10px 14px',
-                          borderRadius: '8px',
-                          border: errors.name ? '1px solid var(--error)' : '1px solid var(--line)',
-                          background: 'var(--paper)',
-                          color: 'var(--ink)',
-                          fontSize: '0.9375rem'
-                        }}
-                      />
-                      {errors.name && <span style={{ color: 'var(--error)', fontSize: '0.8125rem' }}>{errors.name}</span>}
-                    </div>
-
-                    {/* Email */}
-                    <div>
-                      <label style={{ display: 'block', fontSize: '0.875rem', fontWeight: 600, marginBottom: '6px' }}>
-                        Email address *
-                      </label>
-                      <input
-                        type="email"
-                        name="email"
-                        value={formData.email}
-                        onChange={(e) => handleInputChange('email', e.target.value)}
-                        placeholder="jane@example.com"
-                        style={{
-                          width: '100%',
-                          padding: '10px 14px',
-                          borderRadius: '8px',
-                          border: errors.email ? '1px solid var(--error)' : '1px solid var(--line)',
-                          background: 'var(--paper)',
-                          color: 'var(--ink)',
-                          fontSize: '0.9375rem'
-                        }}
-                      />
-                      {errors.email && <span style={{ color: 'var(--error)', fontSize: '0.8125rem' }}>{errors.email}</span>}
-                    </div>
-
-                    {/* Phone */}
-                    <div>
-                      <label style={{ display: 'block', fontSize: '0.875rem', fontWeight: 600, marginBottom: '6px' }}>
-                        Phone <span style={{ color: 'var(--muted)', fontWeight: 400 }}>(optional)</span>
-                      </label>
-                      <input
-                        type="tel"
-                        name="phone"
-                        value={formData.phone}
-                        onChange={(e) => handleInputChange('phone', e.target.value)}
-                        placeholder="+91 98765 43210"
-                        style={{
-                          width: '100%',
-                          padding: '10px 14px',
+                          padding: '10px 12px',
                           borderRadius: '8px',
                           border: '1px solid var(--line)',
                           background: 'var(--paper)',
@@ -426,30 +655,54 @@ export default function JobDetails() {
                       />
                     </div>
 
-                    {/* Start Date */}
-                    <div>
-                      <label style={{ display: 'block', fontSize: '0.875rem', fontWeight: 600, marginBottom: '6px' }}>
-                        When could you start?
-                      </label>
-                      <select
-                        name="start"
-                        value={formData.start}
-                        onChange={(e) => handleInputChange('start', e.target.value)}
-                        style={{
-                          width: '100%',
-                          padding: '10px 14px',
-                          borderRadius: '8px',
-                          border: '1px solid var(--line)',
-                          background: 'var(--paper)',
-                          color: 'var(--ink)',
-                          fontSize: '0.9375rem'
-                        }}
-                      >
-                        <option value="Right away">Right away</option>
-                        <option value="In 1 week">In 1 week</option>
-                        <option value="In 2 weeks">In 2 weeks</option>
-                        <option value="In a month">In a month</option>
-                      </select>
+                    {/* Row 5: Start Date & LinkedIn */}
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '0.875rem' }}>
+                      <div>
+                        <label style={{ display: 'block', fontSize: '0.875rem', fontWeight: 600, marginBottom: '6px' }}>
+                          Earliest Start Date
+                        </label>
+                        <select
+                          name="start"
+                          value={formData.start}
+                          onChange={(e) => handleInputChange('start', e.target.value)}
+                          style={{
+                            width: '100%',
+                            padding: '10px 12px',
+                            borderRadius: '8px',
+                            border: '1px solid var(--line)',
+                            background: 'var(--paper)',
+                            color: 'var(--ink)',
+                            fontSize: '0.9375rem'
+                          }}
+                        >
+                          <option value="Right away">Right away</option>
+                          <option value="In 1 week">In 1 week</option>
+                          <option value="In 2 weeks">In 2 weeks</option>
+                          <option value="In a month">In a month</option>
+                        </select>
+                      </div>
+
+                      <div>
+                        <label style={{ display: 'block', fontSize: '0.875rem', fontWeight: 600, marginBottom: '6px' }}>
+                          LinkedIn Profile <span style={{ color: 'var(--muted)', fontWeight: 400 }}>(optional)</span>
+                        </label>
+                        <input
+                          type="url"
+                          name="resumeUrl"
+                          value={formData.resumeUrl}
+                          onChange={(e) => handleInputChange('resumeUrl', e.target.value)}
+                          placeholder="https://linkedin.com/in/username"
+                          style={{
+                            width: '100%',
+                            padding: '10px 12px',
+                            borderRadius: '8px',
+                            border: '1px solid var(--line)',
+                            background: 'var(--paper)',
+                            color: 'var(--ink)',
+                            fontSize: '0.9375rem'
+                          }}
+                        />
+                      </div>
                     </div>
 
                     {/* Resume Upload */}
@@ -503,25 +756,27 @@ export default function JobDetails() {
                       {errors.resume && <span style={{ color: 'var(--error)', fontSize: '0.8125rem' }}>{errors.resume}</span>}
                     </div>
 
-                    {/* Resume or LinkedIn URL */}
+                    {/* About / Note */}
                     <div>
                       <label style={{ display: 'block', fontSize: '0.875rem', fontWeight: 600, marginBottom: '6px' }}>
-                        LinkedIn or Portfolio link <span style={{ color: 'var(--muted)', fontWeight: 400 }}>(optional)</span>
+                        About You / Why Sélon? <span style={{ color: 'var(--muted)', fontWeight: 400 }}>(optional)</span>
                       </label>
-                      <input
-                        type="url"
-                        name="resumeUrl"
-                        value={formData.resumeUrl}
-                        onChange={(e) => handleInputChange('resumeUrl', e.target.value)}
-                        placeholder="https://linkedin.com/in/username"
+                      <textarea
+                        name="about"
+                        rows={3}
+                        value={formData.about}
+                        onChange={(e) => handleInputChange('about', e.target.value)}
+                        placeholder="Tell us briefly about your background and why you are interested in Sélon Coffee…"
                         style={{
                           width: '100%',
-                          padding: '10px 14px',
+                          padding: '10px 12px',
                           borderRadius: '8px',
                           border: '1px solid var(--line)',
                           background: 'var(--paper)',
                           color: 'var(--ink)',
-                          fontSize: '0.9375rem'
+                          fontSize: '0.9375rem',
+                          fontFamily: 'inherit',
+                          resize: 'vertical'
                         }}
                       />
                     </div>
