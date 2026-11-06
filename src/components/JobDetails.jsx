@@ -37,6 +37,7 @@ export default function JobDetails() {
     resumeUrl: '',
     about: ''
   });
+  const [questionAnswers, setQuestionAnswers] = useState({});
   const [resumeFile, setResumeFile] = useState(null);
   const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -53,7 +54,15 @@ export default function JobDetails() {
         if (!res.ok) throw new Error(`Role not found`);
         const data = await res.json();
         setJob(data.job);
-        setAssessmentConfig(data.job?.assessment || getAssessmentForJob(data.job));
+        const config = data.job?.assessment || getAssessmentForJob(data.job);
+        setAssessmentConfig(config);
+        if (config && config.questions) {
+          const initial = {};
+          config.questions.forEach((q) => {
+            initial[q.question] = q.type === 'choice' && q.options?.length ? q.options[0] : '';
+          });
+          setQuestionAnswers(initial);
+        }
       } catch (err) {
         setError(err.message);
       } finally {
@@ -68,6 +77,10 @@ export default function JobDetails() {
     if (errors[field]) {
       setErrors((prev) => ({ ...prev, [field]: '' }));
     }
+  };
+
+  const handleQuestionChange = (question, val) => {
+    setQuestionAnswers((prev) => ({ ...prev, [question]: val }));
   };
 
   const handleFileChange = (e) => {
@@ -141,6 +154,11 @@ export default function JobDetails() {
         body.append('resumeFile', resumeFile);
       }
 
+      // Append pre-screening questionnaire answers
+      if (Object.keys(questionAnswers).length > 0) {
+        body.append('screening', JSON.stringify(questionAnswers));
+      }
+
       const res = await fetch(apiUrl('/api/applications'), {
         method: 'POST',
         body
@@ -155,14 +173,8 @@ export default function JobDetails() {
       setCandidateId(createdId);
       setCandidateName(formData.name.trim());
 
-      // Wireframe Routing Logic:
-      // "Routed to the test only if available in linked Zoho Recruit (jobid), if not directly thank you page"
-      const assessment = assessmentConfig || getAssessmentForJob(job);
-      if (assessment && assessment.questions && assessment.questions.length > 0) {
-        setStage('assessment'); // Screen 3
-      } else {
-        setStage('thankyou');   // Screen 4
-      }
+      // Application complete with pre-screening answers -> direct transition to Thank You page
+      setStage('thankyou');
       window.scrollTo({ top: 0, behavior: 'smooth' });
     } catch (err) {
       setSubmitError(err.message || 'Failed to submit application. Please try again.');
@@ -787,6 +799,53 @@ export default function JobDetails() {
                         }}
                       />
                     </div>
+
+                    {/* Pre-Screening Questionnaire from Zoho Recruit */}
+                    {assessmentConfig && assessmentConfig.questions && assessmentConfig.questions.length > 0 && (
+                      <div
+                        style={{
+                          marginTop: '0.5rem',
+                          paddingTop: '1.25rem',
+                          borderTop: '1px solid var(--line)'
+                        }}
+                      >
+                        <div style={{ marginBottom: '1rem' }}>
+                          <h4 style={{ margin: '0 0 4px', fontSize: '1rem', fontWeight: 600, color: 'var(--ink)' }}>
+                            Pre-Screening Questionnaire
+                          </h4>
+                          <p style={{ margin: 0, fontSize: '0.8125rem', color: 'var(--muted)' }}>
+                            Please answer the questions below required for this role ({assessmentConfig.title || job.title}).
+                          </p>
+                        </div>
+
+                        <div style={{ display: 'grid', gap: '1rem' }}>
+                          {assessmentConfig.questions.map((q, idx) => (
+                            <div key={q.id || idx}>
+                              <label style={{ display: 'block', fontSize: '0.875rem', fontWeight: 600, marginBottom: '6px' }}>
+                                {idx + 1}. {q.question} {q.mandatory && <span style={{ color: 'var(--error)' }}>*</span>}
+                              </label>
+                              <textarea
+                                rows={2}
+                                value={questionAnswers[q.question] || ''}
+                                onChange={(e) => handleQuestionChange(q.question, e.target.value)}
+                                placeholder="Type your response here…"
+                                style={{
+                                  width: '100%',
+                                  padding: '10px 12px',
+                                  borderRadius: '8px',
+                                  border: '1px solid var(--line)',
+                                  background: 'var(--paper)',
+                                  color: 'var(--ink)',
+                                  fontSize: '0.9375rem',
+                                  fontFamily: 'inherit',
+                                  resize: 'vertical'
+                                }}
+                              />
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
                   </div>
 
                   {submitError && (
