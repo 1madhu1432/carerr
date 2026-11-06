@@ -86,3 +86,4 @@ The output will be in the `dist/` directory, ready to deploy.
 5. **Environment Variables**:
    - `VITE_API_BASE_URL`: `https://your-backend-api.onrender.com`
 6. For client-side routing, ensure Netlify redirects are configured (or use `/* /index.html 200`).
+
