@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-export default function ThankYouStep({ candidateName, candidateId, roleName, isMock }) {
+export default function ThankYouStep({ candidateName, candidateId, jobId, roleName, isMock }) {
   return (
     <div
       className="thankyou-card"
@@ -75,14 +75,24 @@ export default function ThankYouStep({ candidateName, candidateId, roleName, isM
             Applicant: {candidateName}
           </p>
         )}
-        <p style={{ margin: '0 0 0.25rem' }}>
+        <p style={{ margin: '0 0 0.75rem' }}>
           Role: <strong style={{ color: 'var(--ink)' }}>{roleName || 'General Application'}</strong>
         </p>
-        {candidateId && (
-          <p style={{ margin: '0', fontSize: '0.8125rem' }}>
-            Reference ID: <code>#{candidateId}</code>
-          </p>
-        )}
+
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(130px, 1fr))', gap: '0.75rem', marginTop: '0.5rem' }}>
+          {candidateId && (
+            <div style={{ padding: '8px 12px', background: 'var(--surface)', borderRadius: '8px', border: '1px solid var(--line)' }}>
+              <span style={{ display: 'block', fontSize: '0.75rem', color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '0.04em' }}>Candidate ID</span>
+              <strong style={{ fontSize: '0.9375rem', color: 'var(--ink)' }}>#{candidateId}</strong>
+            </div>
+          )}
+          {jobId && (
+            <div style={{ padding: '8px 12px', background: 'var(--surface)', borderRadius: '8px', border: '1px solid var(--line)' }}>
+              <span style={{ display: 'block', fontSize: '0.75rem', color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '0.04em' }}>Job ID</span>
+              <strong style={{ fontSize: '0.9375rem', color: 'var(--ink)' }}>#{jobId}</strong>
+            </div>
+          )}
+        </div>
       </div>
 
       <p style={{ color: 'var(--muted)', fontSize: '0.9375rem', maxWidth: '30rem', margin: '0 auto 2rem' }}>

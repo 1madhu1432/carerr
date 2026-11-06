@@ -217,7 +217,13 @@ export default function JobDetails() {
     );
   }
 
-  const tags = [job.location, job.type, job.remote ? 'Remote' : ''].filter(Boolean);
+  const tags = [
+    `Job ID: #${job.id}`,
+    job.location && job.location !== 'Location not specified' ? job.location : (job.city && job.city !== 'Other' ? job.city : ''),
+    job.type,
+    job.remote ? 'Remote' : '',
+    job.experience ? `Experience: ${job.experience}` : ''
+  ].filter(Boolean);
   const meta = job.salary || (job.experience ? `${job.experience}` : '');
 
   return (
@@ -246,6 +252,7 @@ export default function JobDetails() {
           <ThankYouStep
             candidateName={candidateName}
             candidateId={candidateId}
+            jobId={job.id}
             roleName={job.title}
           />
         )}
