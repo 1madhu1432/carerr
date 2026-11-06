@@ -34,26 +34,22 @@ export default function JobCard({ job }) {
           {job.applyUrl ? (
             <>
               <a className="btn btn-primary" href={job.applyUrl} target="_blank" rel="noopener noreferrer">
-                Apply for this role
+                Apply Now
               </a>
-              <span className="hint">Opens our application form in a new tab.</span>
+              <span className="hint">Opens external hiring portal in a new tab.</span>
             </>
           ) : (
             <>
+              <Link to={`/jobs/${job.id}`} className="btn btn-primary">
+                Apply Now
+              </Link>
               <button
                 type="button"
-                className="btn btn-primary"
+                className="btn btn-ghost"
                 onClick={() => selectRoleAndScroll(job.id)}
               >
-                Apply for this role
+                Quick apply
               </button>
-              <Link
-                to={`/jobs/${job.id}`}
-                className="hint"
-                style={{ textDecoration: 'underline', color: 'var(--link)', cursor: 'pointer' }}
-              >
-                Open full page
-              </Link>
             </>
           )}
         </div>
